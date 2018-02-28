@@ -100,4 +100,14 @@ class Plugin_Name_Public {
 
 	}
 
+	/**
+	 * Display content through short code
+	 *
+	 * @since    1.0.0
+	 */
+	public function render_shortcode() {
+		global $post;
+		print_r($post);
+	}
+
 }

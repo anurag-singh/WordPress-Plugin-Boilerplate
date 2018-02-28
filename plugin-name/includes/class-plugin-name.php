@@ -78,6 +78,8 @@ class Plugin_Name {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+		$this->define_post_type_hooks();
+		$this->define_taxonomy_hooks();
 
 	}
 
@@ -112,6 +114,19 @@ class Plugin_Name {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-plugin-name-i18n.php';
 
 		/**
+		 * The class responsible for creating custom 'post type' of the
+		 * core plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/inc/class-plugin-name-post-type.php';
+
+		/**
+		 * The class responsible for creating custom 'taxonomy' of the
+		 * core plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/inc/class-plugin-name-taxonomy.php';
+
+
+		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-plugin-name-admin.php';
@@ -121,6 +136,8 @@ class Plugin_Name {
 		 * side of the site.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-plugin-name-public.php';
+
+
 
 		$this->loader = new Plugin_Name_Loader();
 
@@ -172,6 +189,72 @@ class Plugin_Name {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_shortcode( 'shortcode', $plugin_public, 'render_shortcode' );
+
+	}
+
+	/**
+	 * Create custom 'post type' for admin & public facing functionality
+	 * of the plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function define_post_type_hooks() {
+		$post_type_arr = array('anu rag');	// Define 'Custom Post Types'
+
+	    foreach ($post_type_arr as $post_type) {
+
+			$labels = $this->get_sanitized_labels($post_type);		// Get sanitized text through a function
+
+			$name = $labels['name'];
+			$single = $labels['single'];
+			$plural = $labels['plural'];
+
+			# Create post type for plugin
+			$plugin_post_type[] = new Plugin_Name_Post_Type(
+											sanitize_title( $name ),
+											$plural,
+											$single,
+											$description = '',
+											$options = array()
+										);
+
+	    }
+
+	}
+
+	/**
+	 * Create custom 'taxonomy' for admin & public facing functionality
+	 * of the plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function define_taxonomy_hooks() {
+		$taxonomy_post_type_asso_array = array(
+							'sin gh' => 'anu rag',
+						);	// Define 'Custom Post Types'
+
+	    foreach ($taxonomy_post_type_asso_array as $taxonomy => $post_type) {
+	    	$post_type_labels = $this->get_sanitized_labels($post_type);	// Get sanitized text through a function
+			$taxo_labels = $this->get_sanitized_labels($taxonomy);			// Get sanitized text through a function
+
+			$post_type_slug = $post_type_labels['slug'];
+			$taxo_slug = $taxo_labels['slug'];
+			$taxo_name = $taxo_labels['name'];
+			$taxo_single = $taxo_labels['single'];
+			$taxo_plural = $taxo_labels['plural'];
+
+			# Create taxonomy for plugin
+			$plugin_taxonomy[] = new Plugin_Name_Taxonomy(
+										$taxo_slug,
+										$taxo_plural,
+										$taxo_single,
+										$post_types = array($post_type_slug),
+										$tax_args = array()
+									);
+	    }
 
 	}
 
@@ -213,6 +296,38 @@ class Plugin_Name {
 	 */
 	public function get_version() {
 		return $this->version;
+	}
+
+	/**
+	 * Convert text into sanitize text.
+	 * Replace all black space (' ') with '-'
+	 * lowercase all characters
+	 * @since     1.0.0
+	 * @return    string
+	 */
+	private function get_sanitized_labels($text) {
+		$name = ucwords(strtolower(preg_replace('/\s+/', ' ', $text) ));
+		$slug = strtolower(sanitize_title( $text ) );
+
+		$single = ucfirst($name);
+
+		$last_character = substr($single, -1);
+
+		if ($last_character === 'y') {
+			$plural = substr_replace($single, 'ies', -1);
+		}
+		else {
+			$plural = $single.'s'; // add 's' to convert singular name to plural
+		}
+
+		$response = array(
+						'name'		=>	$name,
+						'single' 	=> 	$single,
+						'plural' 	=> 	$plural,
+						'slug'		=> 	$slug
+					);
+
+		return $response;
 	}
 
 }
