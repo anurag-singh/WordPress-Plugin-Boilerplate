@@ -1,4 +1,5 @@
 <?php
+# ref - https://www.ibenic.com/creating-wordpress-menu-pages-oop/
 
 /**
  * The file that defines the core plugin class
@@ -131,6 +132,12 @@ class Plugin_Name {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-plugin-name-admin.php';
 
+
+		/**
+		 * The class responsible for defining all actions that occur in the admin area.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-plugin-name-menu.php';
+
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
@@ -173,6 +180,8 @@ class Plugin_Name {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+
+
 
 	}
 
