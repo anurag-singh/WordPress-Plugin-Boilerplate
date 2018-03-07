@@ -52,48 +52,8 @@ class Plugin_Name_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
-		// Define WP Menu
-		$customWPMenu = new WordPressMenu( array(
-			'slug' => 'wpmenu',
-			'title' => 'WP Menu',
-			'desc' => 'Settings for theme custom WordPress Menu',
-			'icon' => 'dashicons-welcome-widgets-menus',
-			'position' => 99,
-		));
-
-		$customWPMenu->add_field(array(
-			'name' => 'text',
-			'title' => 'Text Input',
-			'desc' => 'Input Description',
-			));
-
-		$customWPMenu->add_field(array(
-			'name' => 'checkbox',
-			'title' => 'Checkbox Example',
-			'desc' => 'Check it to wake it',
-			'type' => 'checkbox'));
-
-		// Creating tab with our custom wordpress menu
-		$customTab = new WordPressMenuTab(
-			array(
-				'slug' => 'example_tab',
-				'title' => 'Example Tab' ),
-			$customWPMenu );
-
-		$customTab->add_field(array(
-			'name' => 'select',
-			'title' => 'Select Example',
-			'type' => 'select',
-			'options' => array(
-				'one' => 'Option one',
-				'two' => 'Option two' ) ) );
-
-		$customWPSubMenu = new WordPressSubMenu( array(
-			'slug' => 'wpsubmenu',
-			'title' => 'WP SubMenu',
-			'desc' => 'Settings for custom WordPress SubMenu',
-		), $customWPMenu);
-		// Define WP Menu
+		// add menu, sub-menu & tabs
+		$this->setup_menu_and_tabs();
 
 	}
 
@@ -140,6 +100,127 @@ class Plugin_Name_Admin {
 		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/plugin-name-admin.js', array( 'jquery' ), $this->version, false );
+
+	}
+
+	/**
+	 * Create custom  menu, sub-menu and tabs for the admin area.
+	 *
+	 * @since    1.0.0
+	 */
+	public function setup_menu_and_tabs() {
+
+		$parent_menu_title 	= 'WordPress Menu';
+		$field_title_1		= 'Field 1';
+		$field_title_2		= 'Field 2';
+		$field_title_3		= 'Field 3';
+		$field_title_4		= 'Field 4';
+		$field_title_5		= 'Field 5';
+		$field_title_6		= 'Field 6';
+		$custom_tab_title 	= 'Another Tab';
+
+		$child_menu_title 	= 'WordPress SubMenu';
+
+		// Custom WordPress Parent Menu
+		$parentMenu = new WordPressMenu( array(
+			'title' => $parent_menu_title,
+			'slug' 	=> sanitize_title( $parent_menu_title ),
+			'desc' 	=> 'Settings for theme custom WordPress Menu',
+			'icon' 	=> 'dashicons-welcome-widgets-menus',
+			'position' => 99,
+		));
+
+		//Add field in parent menu
+		$parentMenu->add_field(array(
+			'name' => 'text',
+			'title' => $field_title_1,
+			'desc' => 'Input Description',
+		));
+
+		//Add field in parent menu
+		$parentMenu->add_field(array(
+			'name' => 'checkbox',
+			'title' => $field_title_2,
+			'desc' => 'Check it to wake it',
+			'type' => 'checkbox'
+		));
+
+		// Creating tab with our custom wordpress menu
+		$customTab = new WordPressMenuTab(
+			array(
+				'title' => $custom_tab_title,
+				'slug'	=> sanitize_title( $custom_tab_title ),
+				 ),
+			$parentMenu
+		);
+
+
+		//Add field in parent menu - Custom Tab
+		$customTab->add_field(array(
+			'title' => $field_title_1,
+			'name' => sanitize_title( $field_title_1 ),
+			'desc' => 'Input Description',
+		));
+
+		//Add field in parent menu - Custom Tab
+		$customTab->add_field(array(
+			'title' => $field_title_2,
+			'name' => sanitize_title( $field_title_2 ),
+			'desc' => 'Input Description',
+			'type' => 'textarea'
+		));
+
+		//Add field in parent menu - Custom Tab
+		$customTab->add_field(array(
+			'title' => $field_title_3,
+			'name' => sanitize_title( $field_title_3 ),
+			'desc' => 'Input Description',
+			'type' => 'wpeditor'
+		));
+
+		//Add field in parent menu - Custom Tab
+		$customTab->add_field(array(
+			'title' => $field_title_4,
+			'name' => sanitize_title( $field_title_4 ),
+			'desc' => 'Check it to wake it',
+			'type' => 'checkbox'
+		));
+
+		//Add field in parent menu - Custom Tab
+		$customTab->add_field(array(
+			'title' => $field_title_5,
+			'name' => sanitize_title( $field_title_5 ),
+			'desc' => 'Check it to wake it',
+			'type' => 'radio',
+			'options' => array(
+				'one' => 'Option one',
+				'two' => 'Option two' )
+		));
+
+		//Add field in parent menu - Custom Tab
+		$customTab->add_field(array(
+			'title' => $field_title_6,
+			'name' => sanitize_title( $field_title_6 ),
+			'type' => 'select',
+			'options' => array(
+				'one' => 'Option one',
+				'two' => 'Option two' ) ) );
+		// Custom WordPress Parent Menu
+
+		// Custom WordPress Sub Menu
+		$subMenu = new WordPressSubMenu( array(
+			'title' => $child_menu_title,
+			'slug' => sanitize_title( $child_menu_title ),
+			'desc' => 'Settings for custom WordPress SubMenu',
+		), $parentMenu);
+
+		$subMenu->add_field(array(
+			'name' => 'checkbox',
+			'title' => $field_title_2,
+			'desc' => 'Check it to wake it',
+			'type' => 'checkbox'
+		));
+		// Custom WordPress Sub Menu
 
 	}
 
