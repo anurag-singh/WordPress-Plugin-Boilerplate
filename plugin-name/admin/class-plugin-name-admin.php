@@ -53,7 +53,14 @@ class Plugin_Name_Admin {
 		$this->version = $version;
 
 		// add menu, sub-menu & tabs
-		$this->setup_menu_and_tabs();
+		$parentMenu = $this->setup_parent_menu();		
+		$this->setup_fields_for_parent_menu($parentMenu);
+
+		$customTabParentMenu = $this->setup_tabs_for_parent_menu($parentMenu);
+		$this->setup_fields_for_custom_tab_parent_menu ($customTabParentMenu);
+
+		$subMenu = $this->setup_submenu($parentMenu);
+		$this->setup_tabs_for_sub_menu($subMenu);
 
 	}
 
@@ -108,18 +115,8 @@ class Plugin_Name_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function setup_menu_and_tabs() {
-
-		$parent_menu_title 	= 'WordPress Menu';
-		$field_title_1		= 'Field 1';
-		$field_title_2		= 'Field 2';
-		$field_title_3		= 'Field 3';
-		$field_title_4		= 'Field 4';
-		$field_title_5		= 'Field 5';
-		$field_title_6		= 'Field 6';
-		$custom_tab_title 	= 'Another Tab';
-
-		$child_menu_title 	= 'WordPress SubMenu';
+	public function setup_parent_menu() {
+		$parent_menu_title 	= 'Admin Customization';
 
 		// Custom WordPress Parent Menu
 		$parentMenu = new WordPressMenu( array(
@@ -130,6 +127,18 @@ class Plugin_Name_Admin {
 			'position' => 99,
 		));
 
+		return $parentMenu;
+	}
+
+	/**
+	 * Create input fields parent menu (Default tab).
+	 *
+	 * @since    1.0.0
+	 */
+	public function setup_fields_for_parent_menu($parentMenu) {
+		$field_title_1		= 'Field 1';
+		$field_title_2		= 'Field 2';
+		
 		//Add field in parent menu
 		$parentMenu->add_field(array(
 			'name' => 'text',
@@ -144,6 +153,15 @@ class Plugin_Name_Admin {
 			'desc' => 'Check it to wake it',
 			'type' => 'checkbox'
 		));
+	}
+
+	/**
+	 * Create custom tab for parent menu.
+	 *
+	 * @since    1.0.0
+	 */
+	function setup_tabs_for_parent_menu ($parentMenu) {
+		$custom_tab_title 	= 'Another Tab';
 
 		// Creating tab with our custom wordpress menu
 		$customTab = new WordPressMenuTab(
@@ -154,6 +172,21 @@ class Plugin_Name_Admin {
 			$parentMenu
 		);
 
+		return $customTab;
+	}
+
+	/**
+	 * Create fields for custom tab in parent menu.
+	 *
+	 * @since    1.0.0
+	 */
+	function setup_fields_for_custom_tab_parent_menu ($customTab) {
+		$field_title_1		= 'Field 1';
+		$field_title_2		= 'Field 2';
+		$field_title_3		= 'Field 3';
+		$field_title_4		= 'Field 4';
+		$field_title_5		= 'Field 5';
+		$field_title_6		= 'Field 6';
 
 		//Add field in parent menu - Custom Tab
 		$customTab->add_field(array(
@@ -206,6 +239,15 @@ class Plugin_Name_Admin {
 				'one' => 'Option one',
 				'two' => 'Option two' ) ) );
 		// Custom WordPress Parent Menu
+	}
+
+	/**
+	 * Create custom sub menu and tabs for the admin area.
+	 *
+	 * @since    1.0.0
+	 */
+	public function setup_submenu($parentMenu) {
+		$child_menu_title 	= 	'WordPress SubMenu';
 
 		// Custom WordPress Sub Menu
 		$subMenu = new WordPressSubMenu( array(
@@ -213,15 +255,25 @@ class Plugin_Name_Admin {
 			'slug' => sanitize_title( $child_menu_title ),
 			'desc' => 'Settings for custom WordPress SubMenu',
 		), $parentMenu);
+		// Custom WordPress Sub Menu
 
+		return $subMenu;
+	}
+
+	/**
+	 * Create custom sub menu and tabs for the admin area.
+	 *
+	 * @since    1.0.0
+	 */
+	public function setup_tabs_for_sub_menu($subMenu) {
+		$field_title_1		=	'Field';
+
+		// Add field
 		$subMenu->add_field(array(
-			'name' => 'checkbox',
-			'title' => $field_title_2,
+			'title' => $field_title_1,
+			'name' => sanitize_title( $field_title_1 ),
 			'desc' => 'Check it to wake it',
 			'type' => 'checkbox'
 		));
-		// Custom WordPress Sub Menu
-
 	}
-
 }
