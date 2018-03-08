@@ -1,0 +1,9 @@
+Find										            Replace
+
+WordPress Plugin Boilerplate 				As Wp Admin Customization
+plugin-name									        as-wp-admin-customization
+plugin_name									        as_wp_admin_customization
+Plugin_Name 								        As_Wp_Admin_Customization
+Your Name or Your Company					  Anurag Singh			
+http://example.com 							    http://anuragsingh.me
+Your Name <email@example.com> 			Anurag Singh <developer.anuragsingh@outlook.com>		
